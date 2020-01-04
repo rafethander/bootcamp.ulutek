@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>net_core_bootcamp_b1_Hander</RootNamespace>
+    <StartupObject>net_core_bootcamp_b1_Hander.Program</StartupObject>
+  </PropertyGroup>
+
+
+</Project>
