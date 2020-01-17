@@ -4,5 +4,19 @@
         <name>net-core-bootcamp-b1-Hander</name>
     </assembly>
     <members>
+        <member name="M:net_core_bootcamp_b1_Hander.Controllers.ProductController.Add(net_core_bootcamp_b1_Hander.DTOs.ProductAddDto)">
+            <summary>
+            Git Examples Changes
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net_core_bootcamp_b1_Hander.Controllers.ProductController.Update(net_core_bootcamp_b1_Hander.DTOs.ProductUpdateDto)">
+            <summary>
+            Git Example Master
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

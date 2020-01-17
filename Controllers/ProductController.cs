@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using net_core_bootcamp_b1_Hander.DTOs;
+using net_core_bootcamp_b1_Hander.Models;
+using net_core_bootcamp_b1_Hander.Services;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,57 +18,54 @@ namespace net_core_bootcamp_b1_Hander.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private static readonly IList<Product> data = new List<Product>();
+       
 
-        [HttpPost("Add")]
-        public IActionResult Add([FromBody]Product model)
+        private readonly IProductService _productservice;
+        public ProductController(IProductService productService)
         {
-            model.Id = Guid.NewGuid();
-            model.CreatedAt = DateTime.UtcNow;
-
-            data.Add(model);
-
-            return Ok($"{model.Name} eklendi");
+            _productservice = productService;
         }
 
-        [HttpPut("Update")]
-        public IActionResult Update([FromBody]Product model)
+        /// <summary>
+        /// Git Examples Changes
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+
+        [HttpPost("Add")]
+        public IActionResult Add([FromBody]ProductAddDto model)
         {
-            if (model.Id == null)
-                return BadRequest("id alanı boş geçilemez");
+            var result = _productservice.Add(model);
 
-            var rec = data.Where(x => x.Id == model.Id).FirstOrDefault();
-            if (rec == null)
-                return BadRequest($"{model.Id} 'e ait kayıt bulunamadı");
-
-            rec.Name = model.Name;
-            rec.Price = model.Price;
-            rec.Desc = model.Desc;
-
-            return Ok($"{model.Id} 'e ait kayıt güncellendi");
+            return Ok(result);
+        }
+        /// <summary>
+        /// Git Example Master
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("Update")]
+        public IActionResult Update([FromBody]ProductUpdateDto model)
+        {
+            var result = _productservice.Update(model);
+            return Ok(result);
         }
 
         [HttpDelete("Delete")]
         public IActionResult Delete([BindRequired]Guid id)
         {
-            var rec = data.Where(x => x.Id == id).FirstOrDefault();
-            if (rec == null)
-                return BadRequest($"{id} 'e ait kayıt bulunamadı");
-
-            data.Remove(rec);
-            return Ok($"{rec.Name} silindi");
+            var result = _productservice.Delete(id);
+            return Ok(result);
         }
 
         
         [HttpGet("Get")]
-        public IActionResult Get(string name = null)
+        [ProducesResponseType(typeof(IList<ProductGetDto>),200)]
+        public IActionResult Get()
         {
-            var filterData = data;
+            var result = _productservice.Get();
 
-            if (!string.IsNullOrWhiteSpace(name))
-                filterData = data.Where(x => x.Name.Contains(name)).ToList();
-
-            return Ok(filterData);
+            return Ok(result);  
         }
     }
 }

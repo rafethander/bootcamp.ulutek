@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using net_core_bootcamp_b1_Hander.Services;
 
 namespace net_core_bootcamp_b1_Hander
 {
@@ -46,7 +47,13 @@ namespace net_core_bootcamp_b1_Hander
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+
             services.AddControllers();
+
+            services.AddSingleton<IProductService, ProductServices>();
+
+            services.AddSingleton<IEventService, EventService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
