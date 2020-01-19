@@ -1,5 +1,8 @@
-﻿using net_core_bootcamp_b1_Hander.DTOs;
-using net_core_bootcamp_b1_Hander.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using net_core_bootcamp_b1_Hander.Database;
+using net_core_bootcamp_b1_Hander.Database.Models;
+using net_core_bootcamp_b1_Hander.DTOs;
+using net_core_bootcamp_b1_Hander.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +12,20 @@ namespace net_core_bootcamp_b1_Hander.Services
 {
     public interface IProductService
     {
-        string Add(ProductAddDto model);
-        string Update(ProductUpdateDto model);
-        string Delete(Guid id);
-        IList<ProductGetDto> Get();
+        Task<ApiResult> Add(ProductAddDto model);
+        Task<ApiResult> Update(ProductUpdateDto model);
+        Task<ApiResult> Delete(Guid id);
+        Task <IList<ProductGetDto>> Get();
 
     }
     public class ProductServices : IProductService
     {
-        private static readonly IList<Product> data = new List<Product>();
-        public string Add(ProductAddDto model)
+        private readonly BootcampHanderDbContext _context;
+        public ProductServices(BootcampHanderDbContext context)
+        {
+            _context = context;
+        }
+        public async Task<ApiResult> Add(ProductAddDto model)
         {
             Product entity = new Product
             {
@@ -29,28 +36,32 @@ namespace net_core_bootcamp_b1_Hander.Services
             entity.Name = model.Name;
             entity.Desc = model.Desc;
             entity.Price = model.Price ?? 0;
+          
+            await _context.Product.AddAsync(entity);
+            await _context.SaveChangesAsync();
 
-            data.Add(entity);
-
-            return $"{model.Name} Eklendi.";
+            return new ApiResult {Data=entity.Id,Message=ApiResultMessages.Ok };
+            
 
         }
 
-        public string Delete(Guid id)
+        public async Task<ApiResult> Delete(Guid id)
         {
-            var entity = data.Where(x => x.Id == id).FirstOrDefault();
+            var entity = await _context.Product.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (entity == null)
-                return $"{entity.Id} 'e ait kayıt bulunamadı.";
+                return new ApiResult { Data = entity.Id, Message = ApiResultMessages.PRE01 };
 
             entity.IsDeleted = true;
 
-            return $"{entity.Id} 'e ait kayıt silindi.";
+            await _context.SaveChangesAsync();
+
+            return new ApiResult { Data = entity.Id, Message = ApiResultMessages.Ok };
         }
 
-        public IList<ProductGetDto> Get()
+        public async Task<IList<ProductGetDto>> Get()
         {
             var result = new List<ProductGetDto>();
-            result = data
+            result = await _context.Product
                 .Where(x => !x.IsDeleted)
                 .Select(s => new ProductGetDto
                 {
@@ -60,22 +71,28 @@ namespace net_core_bootcamp_b1_Hander.Services
                     Price=s.Price,
                     Desc=s.Desc
 
-                }).ToList();
+                }).ToListAsync();
 
             return result;
         }
 
-        public string Update(ProductUpdateDto model)
+        public async Task<ApiResult> Update(ProductUpdateDto model)
         {
-            var entity = data.Where(x => !x.IsDeleted && x.Id == model.Id).FirstOrDefault();
+            var entity = await _context.Product.Where(x => !x.IsDeleted && x.Id == model.Id).FirstOrDefaultAsync();
             if (entity == null)
-                return $"{model.Id} 'e ait kayıt bulunamadı.";
+                return new ApiResult { Data = entity.Id, Message = ApiResultMessages.PRE01 };
 
+            _context.Entry<Product>(entity).State = EntityState.Modified;
             entity.Name = model.Name;
             entity.Desc = model.Desc;
 
-            return $"{entity.Id} 'e ait kayıt güncellendi";
+            await _context.SaveChangesAsync();
+
+
+
+            return new ApiResult { Data = entity.Id, Message = ApiResultMessages.Ok };
 
         }
+        
     }
 }

@@ -1,5 +1,5 @@
-﻿using net_core_bootcamp_b1_Hander.DTOs;
-using net_core_bootcamp_b1_Hander.Models;
+﻿using net_core_bootcamp_b1_Hander.Database.Models;
+using net_core_bootcamp_b1_Hander.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

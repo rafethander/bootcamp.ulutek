@@ -18,5 +18,24 @@
             <param name="model"></param>
             <returns></returns>
         </member>
+        <member name="T:net_core_bootcamp_b1_Hander.Helpers.ApiResultMessages">
+            <summary>
+            5 Karakter Olucak
+            Ilk 2 karakter ekranı belirticek
+            3. karakter mesaj türünü belirticek(I:Info,W:Warning,E:Error)
+            Son 2 Karakter Hatayı Belirticek
+            </summary>
+        </member>
+        <member name="F:net_core_bootcamp_b1_Hander.Helpers.ApiResultMessages.Ok">
+            <summary>
+            All Proceses Succesfull
+            </summary>
+        </member>
+        <member name="F:net_core_bootcamp_b1_Hander.Helpers.ApiResultMessages.PRE01">
+            <summary>
+            No Product Found 
+            PRE01=>PRoductError01 
+            </summary>
+        </member>
     </members>
 </doc>

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace net_core_bootcamp_b1_Hander.Models
+namespace net_core_bootcamp_b1_Hander.Database.Models
 {
     public class Event
     {
